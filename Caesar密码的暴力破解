@@ -1,0 +1,105 @@
+#include <stdio.h>  
+
+#include <string.h>  
+
+#include <ctype.h>  
+
+#include <stdlib.h> 
+
+#define MAX_LENGTH 1024  
+
+
+
+#ifndef _countof  
+
+#define _countof(array) (sizeof(array) / sizeof(array[0]))  
+
+#endif  
+
+
+
+void caesar_shift(char* output, const char* input, int shift) {  
+
+  shift = (shift % 26 + 26) % 26; 
+
+  for (int i = 0; input[i] != '\0'; ++i) {  
+
+      unsigned char ch = input[i];  
+
+      if (islower(ch)) {  
+
+          output[i] = 'a' + (ch - 'a' + shift) % 26;  
+
+      }  
+
+      else if (isupper(ch)) {  
+
+          output[i] = 'A' + (ch - 'A' + shift) % 26;  
+
+      }  
+
+      else {  
+
+          output[i] = ch;  
+
+      }  
+
+  }  
+
+  output[strlen(input)] = '\0';  
+
+}  
+
+
+
+int main() {  
+
+  char ciphertext[MAX_LENGTH];  
+
+  char result[MAX_LENGTH];  
+
+  int shift;  
+
+
+
+  printf("请输入密文字符串：");  
+
+
+
+  if (scanf_s("%1023s", ciphertext, (unsigned int)_countof(ciphertext)) != 1) {  
+
+      printf("输入错误，请重试。\n");  
+
+      return 1;  
+
+  }  
+
+  getchar();
+
+
+
+  printf("\n暴力破解结果（共26种可能）：\n");  
+
+  printf("================================\n");  
+
+
+
+  for (shift = 0; shift < 26; ++shift) {  
+
+      caesar_shift(result, ciphertext, -shift); 
+
+      printf("移位量%2d: %s\n", shift, result);  
+
+  }  
+
+
+
+  printf("================================\n");  
+
+  printf("提示：请从上述结果中寻找有意义的明文\n");  
+
+
+
+  return 0;  
+
+}
