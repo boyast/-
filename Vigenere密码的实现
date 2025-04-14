@@ -1,0 +1,134 @@
+#include <stdio.h>
+
+#include <string.h>
+
+#include <ctype.h>
+
+
+
+#define MAX_LEN 1024
+
+
+
+void vigenere_cipher(char* output, const char* input, const char* key, int encrypt) {
+
+   size_t key_len = strlen(key);
+
+   int key_index = 0;
+
+
+
+   for (int i = 0; input[i] != '\0'; ++i) {
+
+       char ch = input[i];
+
+       if (isalpha(ch)) {
+
+           int shift = tolower(key[key_index % key_len]) - 'a';
+
+           if (!encrypt) shift = -shift; 
+
+
+
+           char base = isupper(ch) ? 'A' : 'a';
+
+           output[i] = (ch - base + shift + 26) % 26 + base;
+
+
+
+           key_index++; 
+
+       }
+
+       else {
+
+           output[i] = ch;
+
+       }
+
+   }
+
+   output[strlen(input)] = '\0';
+
+}
+
+
+
+int main() {
+
+   int choice; 
+
+   char input[MAX_LEN];
+
+   char output[MAX_LEN];
+
+   char key[MAX_LEN];
+
+
+
+   do {
+
+       printf("\nVigenère密码系统\n");
+
+       printf("--------------------------------\n");
+
+       printf("1. 加密\n2. 解密\n3. 退出\n");
+
+       printf("请选择操作：");
+
+       if (scanf_s("%d", &choice) != 1) { 
+
+           printf("输入无效，请输入一个数字。\n");
+
+           choice = 0; 
+
+           while (getchar() != '\n'); 
+
+       }
+
+       getchar(); 
+
+
+
+       if (choice == 1 || choice == 2) {
+
+           printf("请输入%s：", (choice == 1) ? "明文" : "密文");
+
+           fgets(input, MAX_LEN, stdin);
+
+           input[strcspn(input, "\n")] = '\0';
+
+
+
+           printf("请输入密钥：");
+
+           fgets(key, MAX_LEN, stdin);
+
+           key[strcspn(key, "\n")] = '\0';
+
+
+
+           vigenere_cipher(output, input, key, choice == 1);
+
+           printf("%s结果：%s\n", (choice == 1) ? "加密" : "解密", output);
+
+           printf("--------------------------------\n");
+
+       }
+
+       else if (choice != 3) {
+
+           printf("无效输入，请重新选择！\n");
+
+       }
+
+   } while (choice != 3);
+
+
+
+   printf("程序已退出。\n");
+
+   return 0;
+
+}
+
